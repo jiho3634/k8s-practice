@@ -1,0 +1,26 @@
+# kubectl apply -f C:\Users\Playdata\Downloads\k8s-practice\1.basic_pod_service\nginx_service.yml
+# kubectl delete -f C:\Users\Playdata\Downloads\k8s-practice\1.basic_pod_service\nginx_service.yml
+# aws eks update-kubeconfig --region ap-northeast-2 --name my-cluster
+# kubectl logs
+# kubectl describe pod
+
+# 인터넷 -> 노드포트 30080 -> service 80 -> pod 80
+# pod 간 통신은 서비스를 호출해서 다른 pod를 호출
+# http://nginx-service:80(pod의 포트)
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: jiho
+spec:
+  # node를 통해 직접 접근 가능한 타입
+  type: NodePort
+  ports: 
+  - port: 80 #service port
+    targetPort: 80 #service가 라우팅해줄 대상의 port(내부포트) 위의 service 포트와 다름.
+    nodePort: 30302 #외부에서 노드로 들어오는 port
+
+  # pod의 labels.app과 service의 selector.app이 일치해야함에 유의
+  selector:
+    app: my-nginx
