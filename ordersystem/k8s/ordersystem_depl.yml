@@ -64,7 +64,7 @@ spec:
             secretKeyRef:
               key: AWS_ACCESS_KEY
               name: jiho-app-secrets
-        - name: REDIS_HOSAWS_SECRET_KEYT
+        - name: AWS_SECRET_KEY
           valueFrom:
             secretKeyRef:
               key: AWS_SECRET_KEY
