@@ -21,7 +21,7 @@ jobs:
               uses: aws-actions/configure-aws-credentials@v1
               with:
                 aws-access-key-id: ${{secrets.AWS_KEY}}
-                aws-secsret-access-key: ${{secrets.AWS_SECRET}}
+                aws-secret-access-key: ${{secrets.AWS_SECRET}}
                 aws-region: ap-northeast-2
 
             - name: update cluster information
