@@ -36,6 +36,5 @@ jobs:
                 REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com
                 REPOSITORY: jiho-ordersystem
               run:
-                docker build -t $REGISTRY/$REPOSITORY:latest \
-                -f ./ordersystem/Dockerfile ./ordersystem \
+                docker build -t $REGISTRY/$REPOSITORY:latest -f ./ordersystem/Dockerfile ./ordersystem
                 docker push $REGISTRY/$REPOSITORY:latest
