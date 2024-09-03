@@ -33,9 +33,9 @@ jwt:
 cloud:
   aws:
     credentials:
-      access-key: ${{secrets.S3_KEY}}
-      secret-key: ${{secrets.S3_SECRET}}
+      access-key: ${{secrets.AWS_KEY}}
+      secret-key: ${{secrets.AWS_SECRET}}
     region:
-      static: ${{secrets.S3_REGION}}
+      static: ap-northeast-2
     s3:
-      bucket: ${{secrets.S3_BUCKET}}
+      bucket: jiho-file
