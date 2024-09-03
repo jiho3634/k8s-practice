@@ -4,13 +4,13 @@ FROM openjdk:11 AS stage1
 WORKDIR /app
 #/app/gradlew로 생성
 COPY gradlew .
-#RUN chmod +x gradlew
+#RUN chmod gradlew
 #/app/gradle 폴더로 생성
 COPY gradle gradle
 COPY src src
 COPY build.gradle .
 COPY settings.gradle .
-RUN chmod +x gradlew
+RUN chmod 777 gradlew
 RUN ./gradlew bootJar
 
 #두 번째 스테이지
