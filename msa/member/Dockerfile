@@ -11,8 +11,8 @@ COPY src src
 COPY build.gradle .
 COPY settings.gradle .
 RUN chmod 777 gradlew
-RUN ./gradlew bootJar --stacktrace --info --scan
 ENV GRADLE_OPTS="-Dscan.acceptTermsOfService=yes"
+RUN ./gradlew bootJar --stacktrace --info --scan
 RUN ./gradlew bootJar
 
 #두 번째 스테이지
