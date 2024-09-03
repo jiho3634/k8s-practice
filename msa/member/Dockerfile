@@ -12,7 +12,6 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradle.properties .
 RUN chmod 777 gradlew
-ENV GRADLE_OPTS="-Dscan.acceptTermsOfService=yes"
 RUN ./gradlew bootJar --stacktrace --info --scan
 RUN ./gradlew bootJar
 
