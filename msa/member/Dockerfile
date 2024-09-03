@@ -10,7 +10,6 @@ COPY gradle gradle
 COPY src src
 COPY build.gradle .
 COPY settings.gradle .
-COPY gradle.properties .
 RUN chmod 777 gradlew
 RUN ./gradlew bootJar --stacktrace --info
 RUN ./gradlew bootJar
