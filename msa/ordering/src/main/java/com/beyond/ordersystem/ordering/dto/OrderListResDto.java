@@ -23,13 +23,14 @@ public class OrderListResDto {
     public OrderListResDto fromEntity(Ordering ordering) {
         return builder()
                 .id(ordering.getId())
-                .memberEmail(ordering.getMember().getEmail())
+//                .memberEmail(ordering.getMember().getEmail())
                 .orderStatus(ordering.getOrderStatus())
                 .orderDetailResDtoList(ordering.getOrderDetails().stream()
                         .map(orderDetail -> new OrderDetailResDto().fromEntity(orderDetail))
                         .collect(Collectors.toList()))
                 .build();
     }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -42,7 +43,7 @@ public class OrderListResDto {
         public OrderDetailResDto fromEntity(OrderDetail orderDetail) {
             return builder()
                     .productId(orderDetail.getId())
-                    .productName(orderDetail.getProduct().getName())
+//                    .productName(orderDetail.getProduct().getName())
                     .productCount(orderDetail.getQuantity())
                     .build();
         }

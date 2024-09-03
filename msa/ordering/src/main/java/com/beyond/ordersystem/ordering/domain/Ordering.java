@@ -1,7 +1,6 @@
 package com.beyond.ordersystem.ordering.domain;
 
 import com.beyond.ordersystem.common.domain.BaseTimeEntity;
-import com.beyond.ordersystem.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,9 +21,7 @@ public class Ordering extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long memberId;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

@@ -13,9 +13,9 @@ public class OrderSaveReqDto {
     private Long productId;
     private Integer productCount;
 
-    public Ordering toEntity(Member member){
+    public Ordering toEntity(Long memberId){
         return Ordering.builder()
-                .member(member)
+                .memberId(memberId)
                 .build();
     }
 }

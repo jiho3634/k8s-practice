@@ -24,30 +24,30 @@ public class OrderController {
         this.orderingService = orderingService;
     }
 
-    @PostMapping("/order/create")
-    public ResponseEntity<?> orderCreate(@RequestBody List<OrderSaveReqDto> dto) {
-        try {
-            Ordering ordering = orderingService.orderCreate(dto);
-            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "Order is successfully created", ordering.getId());
-            return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST"), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/order/create")
+//    public ResponseEntity<?> orderCreate(@RequestBody List<OrderSaveReqDto> dto) {
+//        try {
+//            Ordering ordering = orderingService.orderCreate(dto);
+//            CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "Order is successfully created", ordering.getId());
+//            return new ResponseEntity<>(commonResDto, HttpStatus.CREATED);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), "BAD REQUEST"), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/order/list")
-    public ResponseEntity<?> orderList(Pageable pageable) {
-        try {
-            return new ResponseEntity<>(
-                    new CommonResDto(HttpStatus.OK
-                            , "Order is successfully found"
-                            , orderingService.orderList())
-                    , HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping("/order/list")
+//    public ResponseEntity<?> orderList(Pageable pageable) {
+//        try {
+//            return new ResponseEntity<>(
+//                    new CommonResDto(HttpStatus.OK
+//                            , "Order is successfully found"
+//                            , orderingService.orderList())
+//                    , HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @GetMapping("/order/myorders")
     public ResponseEntity<?> myOrders() {
@@ -62,17 +62,17 @@ public class OrderController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/order/{id}/cancel")
-    public ResponseEntity<?> orderCancel(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(
-                    new CommonResDto(HttpStatus.OK
-                            , "Order is successfully canceled"
-                            , orderingService.orderCancel(id))
-                    , HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PatchMapping("/order/{id}/cancel")
+//    public ResponseEntity<?> orderCancel(@PathVariable Long id) {
+//        try {
+//            return new ResponseEntity<>(
+//                    new CommonResDto(HttpStatus.OK
+//                            , "Order is successfully canceled"
+//                            , orderingService.orderCancel(id))
+//                    , HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

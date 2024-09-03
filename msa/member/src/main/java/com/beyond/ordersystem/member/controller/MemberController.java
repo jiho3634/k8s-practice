@@ -1,4 +1,5 @@
 package com.beyond.ordersystem.member.controller;
+
 import com.beyond.ordersystem.common.auth.JwtTokenProvider;
 import com.beyond.ordersystem.common.dto.CommonErrorDto;
 import com.beyond.ordersystem.common.dto.CommonResDto;
@@ -19,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,8 @@ public class MemberController {
     private String secretKeyRt;
 
     @Autowired
-    MemberController(JwtTokenProvider jwtTokenProvider, MemberService memberService, @Qualifier("2") RedisTemplate<String, Object> redisTemplate) {
+    MemberController(JwtTokenProvider jwtTokenProvider, MemberService memberService,
+            @Qualifier("2") RedisTemplate<String, Object> redisTemplate) {
         this.memberService = memberService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
@@ -58,23 +61,23 @@ public class MemberController {
         }
     }
 
-   @PostMapping("/doLogin")
+    @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody MemberLoginDto dto) {
-       System.out.println("debuging");
-        //  email, password 가 일치하는지 검증
+        System.out.println("debuging");
+        // email, password 가 일치하는지 검증
         Member member = memberService.login(dto);
 
-        //  일치하는 경우 accessToken 생성
+        // 일치하는 경우 accessToken 생성
         String jwtToken = jwtTokenProvider
                 .createToken(member.getEmail(), member.getRole().toString());
 
         //
-       String refreshToken = jwtTokenProvider
-               .createRefreshToken(member.getEmail(), member.getRole().toString());
+        String refreshToken = jwtTokenProvider
+                .createRefreshToken(member.getEmail(), member.getRole().toString());
 
-       //   redis 에 email 과 rt 를 key:value 로 하여 저장
-       redisTemplate.opsForValue().set(member.getEmail(), refreshToken, 240, TimeUnit.HOURS);   // 240 시간
-        //  생성된 토큰을 CommonResDto 에 담아 사용자에게 return
+        // redis 에 email 과 rt 를 key:value 로 하여 저장
+        redisTemplate.opsForValue().set(member.getEmail(), refreshToken, 240, TimeUnit.HOURS); // 240 시간
+        // 생성된 토큰을 CommonResDto 에 담아 사용자에게 return
 
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("id", member.getId());
@@ -85,7 +88,7 @@ public class MemberController {
         return new ResponseEntity<>(new CommonResDto(sig, msg, loginInfo), sig);
     }
 
-    //  admin 만 회원 목록 전체 조회 가능
+    // admin 만 회원 목록 전체 조회 가능
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/member/list")
     public ResponseEntity<?> memberList(Pageable pageable) {
@@ -95,8 +98,8 @@ public class MemberController {
         return new ResponseEntity<>(new CommonResDto(sig, msg, list), sig);
     }
 
-    //  본인은 본인 회원 정보만 조회 가능
-    //  MemberResDto 로 반환
+    // 본인은 본인 회원 정보만 조회 가능
+    // MemberResDto 로 반환
     @GetMapping("/member/myinfo")
     public ResponseEntity<?> memberInfo() {
         MemberResDto dto = memberService.memberInfo();
@@ -112,7 +115,8 @@ public class MemberController {
         try {
             claims = Jwts.parser().setSigningKey(secretKeyRt).parseClaimsJws(rt).getBody();
         } catch (Exception e) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(),  "invalid refresh token"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), "invalid refresh token"),
+                    HttpStatus.BAD_REQUEST);
         }
 
         String email = claims.getSubject();
@@ -120,7 +124,8 @@ public class MemberController {
 
         Object obj = redisTemplate.opsForValue().get(email);
         if (obj == null || !obj.toString().equals(rt)) {
-            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.UNAUTHORIZED.value(), "token is not found"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new CommonErrorDto(HttpStatus.UNAUTHORIZED.value(), "token is not found"),
+                    HttpStatus.UNAUTHORIZED);
         }
         String newAt = jwtTokenProvider.createToken(email, role);
 
@@ -136,5 +141,15 @@ public class MemberController {
         memberService.resetPassword(resetPasswordDto);
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "password is renewed", "ok");
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
+    }
+
+    // Member 정보를 이메일로 조회하는 엔드포인트 추가
+    @GetMapping("/member/by-email")
+    public ResponseEntity<MemberDto> getMemberByEmail(@RequestParam("email") String email) {
+        Member member = memberService.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found with email: " + email));
+        // Member 엔티티를 DTO로 변환하여 반환
+        MemberDto memberDto = new MemberDto(member.getId(), member.getEmail());
+        return ResponseEntity.ok(memberDto);
     }
 }

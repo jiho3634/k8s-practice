@@ -1,7 +1,6 @@
 package com.beyond.ordersystem.ordering.domain;
 
 import com.beyond.ordersystem.common.domain.BaseTimeEntity;
-import com.beyond.ordersystem.product.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +23,7 @@ public class OrderDetail extends BaseTimeEntity {
     @JoinColumn(name = "order_id")
     private Ordering ordering;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long productId;
 
     private Integer quantity;
 }
