@@ -142,14 +142,4 @@ public class MemberController {
         CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "password is renewed", "ok");
         return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
-
-    // Member 정보를 이메일로 조회하는 엔드포인트 추가
-    @GetMapping("/member/by-email")
-    public ResponseEntity<MemberDto> getMemberByEmail(@RequestParam("email") String email) {
-        Member member = memberService.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Member not found with email: " + email));
-        // Member 엔티티를 DTO로 변환하여 반환
-        MemberDto memberDto = new MemberDto(member.getId(), member.getEmail());
-        return ResponseEntity.ok(memberDto);
-    }
 }
