@@ -1,6 +1,5 @@
 package com.beyond.ordersystem.ordering.service;
 import com.beyond.ordersystem.common.service.StockInventoryService;
-import com.beyond.ordersystem.ordering.controller.SseController;
 import com.beyond.ordersystem.ordering.domain.OrderStatus;
 import com.beyond.ordersystem.ordering.domain.Ordering;
 import com.beyond.ordersystem.ordering.domain.OrderDetail;
@@ -21,15 +20,13 @@ import java.util.stream.Collectors;
 public class OrderingService {
     private final OrderRepository orderRepository;
     private final StockInventoryService stockInventoryService;
-    private final SseController sseController;
 
     @Autowired
     OrderingService(OrderRepository orderRepository
             , StockInventoryService stockInventoryService
-            , SseController sseController) {
+            ) {
         this.orderRepository = orderRepository;
         this.stockInventoryService = stockInventoryService;
-        this.sseController = sseController;
     }
 
     // synchronized 를 설정한다 하더라도, 재고 감소가 DB 에 반영되는 시점은 트랜잭션이 커밋되고 종료되는 시점
@@ -63,7 +60,6 @@ public class OrderingService {
         }
         Ordering savedOrdering = orderRepository.save(ordering);
         //  admin 에게 sse 알림
-        sseController.publishMessage(new OrderListResDto().fromEntity(savedOrdering), "admin@test.com");
         return savedOrdering;
     }
 

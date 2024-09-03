@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ordersystem-service
+  name: member-service
   namespace: jiho
 spec:
 # Ingress를 적용하기 위해 ClusterIp로 변경
   type: ClusterIP
   selector:
-    app: ordersystem
+    app: member
   ports:
   - name: http
     port: 80
