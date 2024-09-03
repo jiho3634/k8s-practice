@@ -12,7 +12,7 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradle.properties .
 RUN chmod 777 gradlew
-RUN ./gradlew bootJar --stacktrace --info --scan
+RUN ./gradlew bootJar --stacktrace --info
 RUN ./gradlew bootJar
 
 #두 번째 스테이지
