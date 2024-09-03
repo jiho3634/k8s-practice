@@ -31,41 +31,10 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
               
-            - name: build and push docker member images to ecr
+            - name: build and push docker images to ecr
               env:
                 REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com
-                REPOSITORY: jiho-member
+                REPOSITORY: jiho-ordersystem
               run: |
-                docker build -t $REGISTRY/$REPOSITORY:latest -f ./msa/member/Dockerfile ./msa/member
+                docker build -t $REGISTRY/$REPOSITORY:latest -f ./ordersystem/Dockerfile ./ordersystem
                 docker push $REGISTRY/$REPOSITORY:latest
-
-            - name: eks kubectl apply
-              run: |
-                kubectl apply -f ./msa/member/k8s/member_depl.yml
-                kubectl rollout restart deployment member-deployment -n jiho
-
-            - name: build and push docker order images to ecr
-              env:
-                REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com
-                REPOSITORY: jiho-order
-              run: |
-                docker build -t $REGISTRY/$REPOSITORY:latest -f ./msa/order/Dockerfile ./msa/order
-                docker push $REGISTRY/$REPOSITORY:latest
-
-            - name: eks kubectl apply
-              run: |
-                kubectl apply -f ./msa/order/k8s/order.yml
-                kubectl rollout restart deployment order-deployment -n jiho
-
-            - name: build and push docker product images to ecr
-              env:
-                REGISTRY: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com
-                REPOSITORY: jiho-product
-              run: |
-                docker build -t $REGISTRY/$REPOSITORY:latest -f ./msa/product/Dockerfile ./msa/product
-                docker push $REGISTRY/$REPOSITORY:latest
-
-            - name: eks kubectl apply
-              run: |
-                kubectl apply -f ./msa/product/k8s/order.yml
-                kubectl rollout restart deployment product-deployment -n jiho
